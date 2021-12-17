@@ -1,4 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
+from ExchangeRateAPI import getExchangeRates
+import json
+
 
 app = Flask(__name__)
 
@@ -11,6 +14,24 @@ def hello_world():  # put application's code here
 @app.route('/post', methods=['POST'])
 def post():
     return render_template("POST.html")
+
+
+@app.route('/rates')
+def rates():
+    r = getExchangeRates()
+    rate = json.loads(r.content)
+    r = json.dumps(rate, indent=4, sort_keys=True)
+    return render_template("RATES.html", r=r)
+
+
+@app.route("/extend")
+def extend():
+    return render_template("extend1.html")
+
+
+@app.route("/extend2")
+def extends2():
+    return render_template("extends2.html")
 
 
 @app.route('/param', methods=['POST'])
