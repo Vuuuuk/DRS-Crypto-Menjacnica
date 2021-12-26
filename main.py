@@ -1,5 +1,5 @@
 import json
-
+import MongoAPI
 from ExchangeRateAPI import getExchangeRates
 
 exchangeRateJSON = getExchangeRates()
