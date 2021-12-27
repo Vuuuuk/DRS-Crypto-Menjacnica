@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-address = "109.121.61.9"
+address = "79.175.91.115"
 dataBase = "CryptoMenjacnica"
 
 def connect(username : str, password : str):

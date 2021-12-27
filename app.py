@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request
 from ExchangeRateAPI import getExchangeRates
+from MongoAPI import connect, insert, createTable, dropTable, find, remove
 import json
 
 
 app = Flask(__name__)
+
+
+client = connect("karlo_pest", "drs123")
 
 
 @app.route('/')
@@ -18,10 +22,8 @@ def post():
 
 @app.route('/rates')
 def rates():
-    r = getExchangeRates()
-    rate = json.loads(r.content)
-    r = json.dumps(rate, indent=4, sort_keys=True)
-    return render_template("RATES.html", r=r)
+    r = find("users", "admin", client)
+    return render_template("RATES.html", r=r.index(1))
 
 
 @app.route("/extend")
@@ -44,6 +46,14 @@ def param():
 def get():
     return render_template("GET.html")
 
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    passw = request.form['pass']
+    ret = find('coinCapAPI', username, client);
+
+    return render_template("login.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
