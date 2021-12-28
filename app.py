@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from ExchangeRateAPI import getExchangeRates
 from MongoAPI import connect, insert, createTable, dropTable, find, remove
+import pymongo
 import json
 
 
@@ -51,9 +52,83 @@ def get():
 def login():
     username = request.form['username']
     passw = request.form['pass']
-    ret = find('coinCapAPI', username, client);
+    db = client["CryptoMenjacnica"]
+    table = db["users"]
+    user = table.find_one({"Username": username, "Password": passw})
+    if  not user:
+        return render_template("login.html", t="NO SUCH USER")
+    text = "Welcome { }"
+    return render_template("login.html", t = text.format(user["Username"]))
 
-    return render_template("login.html")
+
+@app.route('/exchange')
+def exchange():
+    startCoin = request.form['startCoin']
+    startCoinType = request.form['startCoinType']
+    endCoinType = request.form['endCoinType']
+    db = client["CryptoMenjacnica"]
+    table = db["coinCapAPI"]
+    startCoin = table.find({"symbol": startCoinType})
+    endCoin = table.find({"symbol": endCoinType})
+
+    endCoinNum = startCoin["priceUsd"] / endCoin["priceUsd"]
+
+    #put this into the database
+
+
+
+
+
+@app.route('/reg', methods=['POST'])
+def reg():
+    username = request.form['username']
+    passw = request.form['pass']
+    Firstname = request.form['fname']
+    Lasttname = request.form['lname']
+    db = client["CryptoMenjacnica"]
+    table = db["users"]
+    if table.count_documents({"Username": username}) == 0:
+        return render_template("login.html", t="THAT USERNAME IS TAKEN")
+
+    user = {
+        "_id" : "ldkjsakfjbsk",
+        "Username" : username,
+        "Password" : passw,
+        "FirstName" : Firstname,
+        "LastName" : Lasttname
+
+    }
+
+    table.insert_one(user)
+
+    return render_template("login.html", t= "Registration Complete")
+
+
+@app.route('/modify', methods=['POST'])
+def modify():
+    username = request.form['username']
+    passw = request.form['pass']
+    Firstname = request.form['fname']
+    Lasttname = request.form['lname']
+    db = client["CryptoMenjacnica"]
+    table = db["users"]
+    if table.count_documents({"Username": username}) != 0:
+        return render_template("login.html", t="THAT USERNAME DOES NOT EXIST")
+
+    user = {
+        "_id": "ldkjsakfjbsk",
+        "Username": username,
+        "Password": passw,
+        "FirstName": Firstname,
+        "LastName": Lasttname
+
+    }
+
+    table.find_one_and_replace({"Username" : username}, {user})
+    return render_template("login.html", t="THAT USERNAME DOES NOT EXIST")
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
