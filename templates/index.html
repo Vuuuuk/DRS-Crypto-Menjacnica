@@ -1,19 +1,499 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/util.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/molecular.ico') }}">
 
+    <!-- CUSTOM MODAL -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 
-    <title>Title</title>
+    <title>BitEx | Fastest & Safest Crypto Retailer</title>
+
 </head>
+
 <body>
-<h1> This is a welcome page!</h1>
-<form action="/get" method="get"> <input type="submit" value="GET"> </form>
-<form action="/login" method="post"> <input type="text" name="username" > <input type="text" name="pass"> <input type="submit" value="login"> </form>
-<form action="/post" method="POST"> <input type="submit" value="POST"> </form>
-<form action="/extend"> <input type="submit" value="EXTEND"> </form>
-<form action="/rates"> <input type="submit" value="RATES">  </form>
-<p> Type some text to send to the next page</p>
-<form action="/param" method="post"> <input type="text" name="text">  <input type="submit" value="SEND"></form>
+
+    {% if session["user_id"]|length %}
+
+    <!-- MENU LOGGED IN-->
+
+        <div class = "navbar">
+            <div class="container flex">
+                <a style="all: unset; cursor: pointer" href = "{{ url_for('index') }}"><h1 class = "logo">BitEx.</h1></a>
+                    <nav>
+                        <ul>
+                            <li><a href = "#">Buy & Sell</a></li>
+                            <li><a href = "#balanceModal" class="modal-button">Balance</a></li>
+                            <li><a href = "#swapModal" class="modal-button">Swap</a></li>
+                            <li><a href = "#historyModal" class="modal-button">History</a></li>
+                            <li><a href = "#profileModal" class="modal-button">Profile</a></li>
+                            <li><a href = "{{ url_for('logout') }}">Sign Out</a></li>
+                        </ul>
+                    </nav>
+            </div>
+        </div>
+
+    <!-- MENU LOGGED IN-->
+
+    <!-- HEADER LOGGED IN -->
+
+        <section class="showcase">
+            <div class="container grid">
+                <div class="showcase-text">
+                    <h1>The easiest and safest way to buy & sell crypto</h1>
+                    <p>The safety of your money is our highest priority.
+                        That is why we do not store any of your funds or your private keys.
+                        Everything remains in your full control at all times.</p>
+                    <a href="#verifyModal" class="btn btn-outline modal-button">Verify account</a>
+                </div>
+                <div class="showcase-form-logged-in card">
+                    <h2>Make a transfer</h2>
+                    <form action="/transfer" method="post">
+                        <div class="form-control">
+                            <input type="email" name="recipients_email" placeholder="Recipients email address" required>
+                        </div>
+                        <div class="form-control">
+                            <input type="number" min="0" name="recipients_amount" placeholder="Amount to send" required>
+                        </div>
+                        <div class="form-control">
+                            <input type="datalist" name="senders_available_coins" placeholder="Available coins" required>
+                        </div>
+                        <input type="submit" value="Transfer" class="btn btn-primary">
+                    </form>
+
+                    <!-- ERROR FLASH -->
+
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for msg in messages %}
+                                <p>{{msg}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- ERROR FLASH -->
+
+                </div>
+            </div>
+        </section>
+
+    <!-- HEADER LOGGED IN -->
+
+    <!-- MARKET STATS LOGGED IN -->
+
+    <section class="stats">
+        <div class="container">
+            <h2 class="text-center my-4">
+                Track the Market and Watch Your Portfolio Grow
+            </h2>
+        </div>
+        <div class="my-1">
+            <table>
+                <tr>
+                    <th/>
+                    <th>Name</th>
+                    <th>Symbol</th>
+                    <th>Buy</th>
+                    <th>Sell</th>
+                    <th/>
+                </tr>
+                {% for row in popularCoins %}
+                    <tr>
+                        <td>
+                            <img src= {{"https://cryptologos.cc/logos/%s-%s-logo.svg?v=014"|format(row["name"]|lower|replace(" ","-"),row["symbol"]|lower)}}>
+                        </td>
+                        <td>{{ row["name"] }}</td>
+                        <td>{{ row["symbol"] }}</td>
+                        <td>{{ "${:,.2f}".format(row["priceUsd"]|float) }}</td>
+                        <td>{{ "${:,.2f}".format((row["priceUsd"]|float - (row["priceUsd"]|float * 3)/100)) }}</td>
+                        <td>
+                            <form>
+                                <a class="btn btn-market">Buy / Sell</a>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="allMarketStats py-2">
+            <a style="color: var(--primary-color)" href="#">View All Markets</a>
+        </div>
+
+    </section>
+
+    <!-- MARKET STATS LOGGED IN -->
+
+    <!-- ADDITIONAL INFO LOGGED IN -->
+
+    <section class="crypto bg-primary my-2 py-2">
+        <div class="container grid">
+            <div class="text-center">
+                <h2 class="lg">Why Choose BitEx</h2>
+                <p class="lead my-1">
+                    Whether you're
+                    just starting out, or have your crypto black-belt,
+                    we're the friendliest, easiest and safest way to buy, sell and swap crypto.
+                </p>
+                <a href="#verifyModal" class="btn btn-secondary modal-button">Get started</a>
+            </div>
+            <img style="transform: scale(0.85)" src="{{ url_for('static', filename='images/molecular.svg') }}" alt="">
+        </div>
+    </section>
+
+    <!-- ADDITIONAL INFO LOGGED IN -->
+
+    {% else %}
+
+    <!-- MENU NOT LOGGED IN -->
+
+        <div class = "navbar">
+            <div class="container flex">
+                <a style="all: unset; cursor: pointer" href = "{{ url_for('index') }}"><h1 class = "logo">BitEx.</h1></a>
+                    <nav>
+                        <ul>
+                            <li><a href = "{{ url_for('notLoggedIn') }}">Buy & Sell</a></li>
+                            <li><a href = "{{ url_for('notLoggedIn') }}">Balance</a></li>
+                            <li><a href = "{{ url_for('notLoggedIn') }}">Swap</a></li>
+                            <li><a href = "{{ url_for('notLoggedIn') }}">History</a></li>
+                        </ul>
+                    </nav>
+            </div>
+        </div>
+
+    <!-- MENU NOT LOGGED IN-->
+
+    <!-- HEADER NOT LOGGED IN -->
+
+        <section class="showcase">
+            <div class="container grid">
+                <div class="showcase-text">
+                    <h1>The best place for Kiwis to buy and sell crypto</h1>
+                    <p>Buy and sell instantly with BitEx, fastest and safest crypto retailer.
+                       Deliver to any wallet address or withdraw to your bank account in as little as 2 minutes.</p>
+                    <a href="#registerModal" class="btn btn-outline modal-button">Make an account</a>
+                </div>
+                <div class="showcase-form card">
+                    <h2>Sign in here</h2>
+                    <form action="/login" method="post">
+                        <div class="form-control">
+                            <input type="email" name="login_email" placeholder="Your email address" required>
+                        </div>
+                        <div class="form-control">
+                            <input type="password" name="login_password" placeholder="Your password" required>
+                        </div>
+                        <input type="submit" value="Sign in" class="btn btn-primary">
+                    </form>
+
+                    <!-- LOGIN FLASH -->
+
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for msg in messages %}
+                                <p>{{msg}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- LOGIN FLASH -->
+
+                </div>
+            </div>
+        </section>
+
+    <!-- HEADER NOT LOGGED IN -->
+
+    <!-- MARKET STATS NOT LOGGED IN -->
+
+    <section class="stats">
+        <div class="container">
+            <h2 class="text-center my-1">
+                Coins Sent to your Private Wallet Within Minutes
+            </h2>
+        </div>
+        <div class="my-4">
+            <table id="coinAPITable">
+                <tr>
+                    <th/>
+                    <th>Name</th>
+                    <th>Symbol</th>
+                    <th>Buy</th>
+                    <th>Sell</th>
+                    <th/>
+                </tr>
+                {% for row in popularCoins %}
+                    <tr>
+                        <td>
+                            <img src= {{"https://cryptologos.cc/logos/%s-%s-logo.svg?v=014"|format(row["name"]|lower|replace(" ","-"),row["symbol"]|lower)}}>
+                        </td>
+                        <td>{{ row["name"] }}</td>
+                        <td>{{ row["symbol"] }}</td>
+                        <td>{{ "${:,.2f}".format(row["priceUsd"]|float) }}</td>
+                        <td>{{ "${:,.2f}".format((row["priceUsd"]|float - (row["priceUsd"]|float * 3)/100)) }}</td>
+                        <td>
+                            <form>
+                                <a href="{{ url_for('notLoggedIn') }}" class="btn btn-market">Buy / Sell</a>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="allMarketStats">
+            <a href="{{ url_for('notLoggedIn') }}" style="color: var(--primary-color)" href="#">View All Markets</a>
+        </div>
+
+    </section>
+
+    <!-- MARKET STATS NOT LOGGED IN -->
+
+    <!-- ADDITIONAL INFO NOT LOGGED IN -->
+
+    <section class="crypto bg-primary my-2 py-2">
+        <div class="container grid">
+            <div class="text-center">
+                <h2 class="lg">Why Choose BitEx</h2>
+                <p class="lead my-1">
+                    Whether you're
+                    just starting out, or have your crypto black-belt,
+                    we're the friendliest, easiest and safest way to buy, sell and swap crypto.
+                </p>
+                <a href="#registerModal" class="btn btn-secondary modal-button">Get started</a>
+            </div>
+            <img style="transform: scale(0.85)" src="{{ url_for('static', filename='images/molecular.svg') }}" alt="">
+        </div>
+    </section>
+
+    <!-- ADDITIONAL INFO NOT LOGGED IN -->
+
+    {% endif %}
+
+    <!-- STATS -->
+
+    <section class="stats">
+        <div class="container">
+            <h3 class="stats-heading text-center">
+                Trusted by +100K Customers
+            </h3>
+            <div class="grid grid-3 text-center my-4">
+                <div>
+                    <i class="fas fa-project-diagram fa-3x">
+                        <h3>492,405</h3>
+                        <p>Swaps</p>
+                    </i>
+                </div>
+                <div>
+                    <i class="fas fa-link fa-3x">
+                        <h3>1,205,405</h3>
+                        <p>Transactions</p>
+                    </i>
+                </div>
+                <div>
+                    <i class="fas fa-users fa-3x">
+                        <h3>102,349</h3>
+                        <p>Kiwis</p>
+                    </i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+
+    <!-- FOOTER -->
+
+    <footer class="bg-secondary py-1">
+        <div class="text-center">
+            <div>
+                <a class="m-025" href="#"><i class="fab fa-github fa-2x"></i></a>
+                <a class="m-025" href="#"><i class="fab fa-facebook fa-2x"></i></a>
+                <a class="m-025" href="#"><i class="fab fa-instagram fa-2x"></i></a>
+                <a class="m-025" href="#"><i class="fab fa-twitter fa-2x"></i></a>
+                <p>&copy; 2021 BitEx Crypto.  All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FOOTER -->
+
+    <!-- REGISTER MODAL -->
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeBtn">
+                    &times;
+                </span>
+                <h2>Make an account</h2>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Fill out the form below to get started
+                </p>
+                <form>
+                    <div class="modal-form">
+                        <input type="text" name="register_firstname" placeholder="Your name" required>
+                        <input type="text" name="register_surname" placeholder="Your surname" required><br>
+                        <input type="text" name="register_address" placeholder="Your address" required>
+                        <input type="text" name="register_city" placeholder="City" required><br>
+                        <input type="text" name="register_state" placeholder="State" required>
+                        <input type="tel" pattern="^(\+381)?(\s|-)?6(([0-6]|[8-9])\d{7}|(77|78)\d{6}){1}$" name="register_tel" placeholder="Your phone number" required><br>
+                        <input type="email" name="register_email" placeholder="Your Email" required>
+                        <input type="password" name="register_password" placeholder="Your password" required><br>
+                        <input type="submit" value="Register" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER MODAL -->
+
+    <!-- VERIFY MODAL -->
+
+    <div id="verifyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeBtn">
+                    &times;
+                </span>
+                <h2>Verify Account</h2>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Fill out the form below to get verified
+                </p>
+                <form>
+                    <div class="modal-form">
+                        <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" name="verify_creditcard" placeholder="Credit card number" required>
+                        <input type="text" name="verify_name" placeholder="Credit card name" required><br>
+                        <input type="tel" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" name="verify_date" placeholder="MM / YY" required>
+                        <input type="tel" inputmode="numeric" pattern="[1-9]{3}" maxlength="3" name="verify_date" placeholder="CVC" required><br>
+                        <input type="submit" value="Verify" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- VERIFY MODAL -->
+
+    <!-- PROFILE MODAL -->
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeBtn">
+                    &times;
+                </span>
+                <h2>Account details</h2>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Update your account details with ease
+                </p>
+                <form>
+                    <div class="modal-form">
+                        <input type="text" name="account_firstname" required>
+                        <input type="text" name="account_surname" required><br>
+                        <input type="text" name="account_address" required>
+                        <input type="text" name="account_city" required><br>
+                        <input type="text" name="account_state" required>
+                        <input type="tel" pattern="^(\+381)?(\s|-)?6(([0-6]|[8-9])\d{7}|(77|78)\d{6}){1}$" name="account_tel" required><br>
+                        <input type="email" name="account_email" required>
+                        <input type="password" name="account_password" required><br>
+                        <input type="submit" value="Update" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE MODAL -->
+
+    <!-- HISTORY MODAL -->
+
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeBtn">
+                    &times;
+                </span>
+                <h2>Transaction history</h2>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Take a look at your transaction status & history
+                </p>
+
+                    DINAMICKI GENERISATI NA OSNOVU PODATAKA IZ BAZE
+
+            </div>
+        </div>
+    </div>
+
+    <!-- HISTORY MODAL -->
+
+    <!-- SWAP MODAL -->
+
+    <div id="swapModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeBtn">
+                    &times;
+                </span>
+                <h2>Crypto swap</h2>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Swap your coins with ease
+                </p>
+                <form>
+                    <div class="modal-form">
+                        <input type="datalist" name="swap_userCoins" placeholder="Your coins" required>
+                        <input type="datalist" name="swap_availableCoins" placeholder="Available coins" required><br>
+                        <input type="number" name="swap_userAmount" placeholder="Amount to swap" required>
+                        <input type="number" name="swap_availableAmount" placeholder="Amount to get" required><br>
+                        <input type="submit" value="Swap" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SWAP MODAL -->
+
+    <!-- BALANCE MODAL -->
+
+    <div id="balanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeBtn">
+                    &times;
+                </span>
+                <h2>Account balance</h2>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Watch your portfolio grow
+                </p>
+                    DINAMICKI GENERISATI NA OSNOVU PODATAKA IZ BAZE
+            </div>
+        </div>
+    </div>
+
+    <!-- SWAP MODAL -->
+
+    <!-- CUSTOM MODAL -->
+    <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+
 </body>
+
 </html>
