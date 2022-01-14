@@ -1,0 +1,332 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+
+:root{
+    --primary-color: #292C6D;
+    --secondary-color: #161853;
+    --primary-color-text: #FAEDF0
+}
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+/*MENU CSS*/
+
+    .navbar{
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+        height: 70px;
+    }
+
+    .navbar ul{
+        display: flex;
+    }
+
+    .navbar a{
+        color: #FAEDF0;
+        padding: 10px;
+        margin: 0 5px;
+    }
+
+    .navbar a:hover{
+        border-bottom: 2px #FAEDF0 solid;
+    }
+
+    .navbar .flex{
+        justify-content: space-between;
+    }
+
+/*MENU CSS*/
+
+/*HEADER CSS*/
+
+    .showcase{
+        height: 400px;
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+        position: relative;
+    }
+
+    .showcase h1{
+        font-size: 40px;
+    }
+
+    .showcase p{
+        margin: 20px 0;
+    }
+
+    .showcase .grid{
+        overflow: visible;
+        grid-template-columns: 55% 45%;
+        gap: 30px;
+    }
+
+    .showcase-text{
+        /*animation: slideInFromLeft 1s ease-in;*/
+    }
+
+    .showcase-form-logged-in{
+        /*animation: slideInFromRight 1s ease-in;*/
+        position: relative;
+        top: 60px;
+        height: 400px;
+        width: 400px;
+        padding: 40px;
+        z-index: 100;
+        justify-self: flex-end;
+    }
+
+    .showcase-form-logged-in .form-control{
+        margin: 30px 0;
+    }
+
+    .showcase-form-logged-in input[type="email"],
+    .showcase-form-logged-in input[type="number"],
+    .showcase-form-logged-in input[type="datalist"],
+    .showcase-form-logged-in input[type="password"],
+    .showcase-form-logged-in input[type="text"]{
+        background-color: var(--primary-color-text);
+        border: 0;
+        border-bottom: 1px solid var(--primary-color);
+        width: 100%;
+        padding: 3px;
+        font-size: 16px;
+    }
+
+    .showcase-form-logged-in input:focus{
+        outline: none;
+    }
+
+    .showcase-form{
+        /*animation: slideInFromRight 1s ease-in;*/
+        position: relative;
+        top: 60px;
+        height: 350px;
+        width: 400px;
+        padding: 40px;
+        z-index: 100;
+        justify-self: flex-end;
+    }
+
+    .showcase-form .form-control{
+        margin: 30px 0;
+    }
+
+    .showcase-form input[type="email"],
+    .showcase-form input[type="number"],
+    .showcase-form input[type="datalist"],
+    .showcase-form input[type="password"],
+    .showcase-form input[type="text"]{
+        background-color: var(--primary-color-text);
+        border: 0;
+        border-bottom: 1px solid var(--primary-color);
+        width: 100%;
+        padding: 3px;
+        font-size: 16px;
+    }
+
+    .showcase-form input:focus{
+        outline: none;
+    }
+
+    .showcase::before,
+    .showcase::after{
+        content: '';
+        position: absolute;
+        height: 100px;
+        bottom: -70px;
+        right: 0;
+        left: 0;
+        background-color: var(--primary-color-text);
+        transform: skewY(-3deg);
+        -webkit-transform: skewY(-3deg);
+        -moz-transform: skewY(-3deg);
+        -ms-transform: skewY(-3deg);
+    }
+
+/*HEADER CSS*/
+
+/*MARKET STATS CSS*/
+
+    .stats{
+        padding-top: 100px;
+    }
+
+    .stats h2{
+        font-size: 35px;
+        padding-top: 45px;
+    }
+
+    .stats table{
+
+        z-index: 100;
+        background-color: var(--primary-color-text);
+        color: var(--primary-color);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .stats tr{
+        height: 35px;
+        border: 1px solid #E8E8E8;
+        text-align: center;
+    }
+
+    .stats td{
+        height: 75px;
+        text-align: left;
+        padding: 10px;
+    }
+
+    .stats .btn-market{
+        border-radius: 20px;
+        transform: scale(0.75);
+    }
+
+    .stats .btn-market:hover{
+        transform: scale(0.73);
+    }
+
+    .stats img{
+        width: 75px;
+        height: 75px;
+        transform: scale(0.55);
+    }
+
+    .stats .allMarketStats{
+        text-align: center;
+        margin-top: -25px;
+        font-weight: bold;
+    }
+
+/*MARKET STATS CSS*/
+
+/*ADDITIONAL INFO CSS*/
+
+    .crypto .grid{
+        grid-template-columns: 7fr 3fr;
+
+    }
+
+/*ADDITIONAL INFO CSS*/
+
+/*STATS*/
+
+    .stats{
+        padding-top: 20px;
+    }
+
+    .stats h3{
+        font-size: 35px;
+    }
+
+    .stats-heading{
+        max-width: 500px;
+        margin: auto;
+    }
+
+    .stats .grid h3{
+        margin: 10px 0;
+        font-size: 35px;
+    }
+
+    .stats .grid p{
+        margin: 25px 0;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+/*STATS*/
+
+/*ANIMATIONS*/
+
+@keyframes slideInFromLeft{
+    0%{
+        transform: translateX(-100%);
+    }
+    100%{
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromRight{
+    0% {
+        transform: translateX(+100%);
+    }
+    100%{
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromTop{
+    0% {
+        transform: translateY(-100%);
+    }
+    100%{
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromBottom{
+    0% {
+        transform: translateY(+100%);
+    }
+    100%{
+        transform: translateX(0);
+    }
+}
+
+
+/*ANIMATIONS*/
+
+/*TABLETS*/
+
+    @media(max-width: 768px){
+        .grid,
+        .showcase .grid,
+        .stats .grid,
+        .crypto .grid{
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+        }
+        .showcase{
+            height: auto;
+        }
+
+        .showcase-text{
+            /*animation: slideInFromTop 1s ease-in;*/
+            text-align: center;
+            margin-top: 40px;
+        }
+        .showcase-form{
+            /*animation: slideInFromBottom 1s ease-in;*/
+            justify-self: center;
+            margin: auto;
+        }
+    }
+
+/*TABLETS*/
+
+/*MOBILE*/
+
+    @media(max-width: 500px){
+        .navbar{
+            height: 110px;
+        }
+        .navbar .flex{
+            flex-direction: column;
+        }
+        .navbar ul{
+            padding: 10px;
+            background-color: rgba(0,0,0,0.1);
+        }
+    }
+
+/*MOBILE*/
+
+
+
