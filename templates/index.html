@@ -337,7 +337,7 @@
                 <p>
                     Fill out the form below to get started
                 </p>
-                <form>
+                <form action="/register">
                     <div class="modal-form">
                         <input type="text" name="register_firstname" placeholder="Your name" required>
                         <input type="text" name="register_surname" placeholder="Your surname" required><br>
@@ -348,6 +348,16 @@
                         <input type="email" name="register_email" placeholder="Your Email" required>
                         <input type="password" name="register_password" placeholder="Your password" required><br>
                         <input type="submit" value="Register" class="btn btn-primary">
+
+                           {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for msg in messages %}
+                                <p>{{msg}}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+
                     </div>
                 </form>
             </div>
@@ -399,7 +409,7 @@
                 <p>
                     Update your account details with ease
                 </p>
-                <form>
+                <form action="/modify">
                     <div class="modal-form">
                         <input type="text" name="account_firstname" required>
                         <input type="text" name="account_surname" required><br>
