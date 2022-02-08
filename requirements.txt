@@ -1,2 +1,4 @@
 requests~=2.26.0
-pyodbc~=4.0.32
+Flask~=2.0.2
+pymongo~=4.0.1
+livereload~=2.6.3
