@@ -19,11 +19,24 @@ def createTable(tableName : str, client):
         client[dataBase].create_collection(tableName)
         return print("Success -> " + tableName + " successfully created.\n")
 
+
+
+
 def dropTable(tableName : str, client):
     db = client[dataBase]
     if(tableName in db.list_collection_names()):
         db[tableName].drop()
         return print("Success -> " + tableName + " dropped successfully.\n")
+    else:
+        return print("Error -> " + tableName + " not found.\n")
+
+
+def getCoin(tableName: str, coin: str, client):
+    db = client[dataBase]
+    if tableName in db.list_collection_names():
+        table = db[tableName]
+        found = list(table.find({"symbol": coin}, {"_id": 0, "rank": 0}))
+        return found[0]
     else:
         return print("Error -> " + tableName + " not found.\n")
 

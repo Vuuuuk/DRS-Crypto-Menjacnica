@@ -44,7 +44,7 @@ def notLoggedIn():
 
 @app.route("/register", methods=["POST"])
 def register():
-    firstName = request.form["register_firstname"]
+    firsttName = request.form["register_firstname"]
     surname = request.form["register_surname"]
     address = request.form["register_address"]
     city = request.form["register_city"]
@@ -53,18 +53,19 @@ def register():
     email = request.form["register_email"]
     password = request.form["register_password"]
     user = returnFind("users", "email", email)
+    AvailableCoins = {}
     if not user:
        User = {
-           firstName :  firstName,
-           surname :  surname,
-           address :  address,
-           city :  city,
-           state :  state,
-           tel :  tel,
-           email :  email,
-           password :  passwrod,
-           AvailableCoind : {},
-           IsVerified : false
+           "firstName" :  firsttName,
+           "surname" :  surname,
+           "address" :  address,
+           "city" :  city,
+           "state" :  state,
+           "tel" :  tel,
+           "email" :  email,
+           "password" :  password,
+           "AvailableCoins" : {},
+           "IsVerified" : False
        }
        insertUser(User)
     else:
@@ -73,7 +74,7 @@ def register():
     return render_template("index.html", popularCoins=returnPopularCoins(5))
 
 @app.route("/swap")
-def swap:
+def swap():
     fromCoins = request.form["swap_userCoins"]
     toCoins = request.form["swap_availableCoins"]
     fromAmount = request.form["swap_userAmount"]
@@ -83,7 +84,22 @@ def swap:
 
     User = returnFind("users", "Email", userMail)
 
+    coin1 = getcoin(fromCoins)
+    coin2 = getcoin(toCoins)
 
+    if User["AvailableCoins"][coin1] < fromAmount:
+        flash("You don't have enough coins")
+        return render_template("index.html", popularCoins=returnPopularCoins(5))
+
+    if not User["AvailableCoins"][coin2]:
+        User["AvailableCoins"][coin2] = toAmount
+    else:
+        User["AvailableCoins"][coin2] += toAmount
+    User["AvailableCoins"][coin1] -= fromAmount
+
+    updateUser(User)
+
+    return render_template("index.html", popularCoins=returnPopularCoins(5))
 
 
 @app.route("/modify", methods=["POST"])
@@ -95,24 +111,24 @@ def modify():
     state = request.form["account_state"]
     tel = request.form["account_tel"]
     email = request.form["account_email"]
-    password = request.form["account_password"]
     user = returnFind("users", "email", email)
     if not user:
-       User = {
-           firstName :  firstName,
-           surname :  surname,
-           address :  address,
-           city :  city,
-           state :  state,
-           tel :  tel,
-           email :  email,
-           password :  passwrod,
-           AvailableCoind : {},
-           IsVerified : false
+        flash("Something went wrong")
+        return render_template("index.html", popularCoins=returnPopularCoins(5))
+
+    User = {
+       "firstName" :  firstName,
+       "surname" :  surname,
+       "address" :  address,
+       "city" :  city,
+       "state" :  state,
+       "tel" :  tel,
+       "email" :  email,
+       "password" :  user["password"],
+       "AvailableCoind" : user["AvailableCoins"],
+       "IsVerified" : user["IsVerified"]
        }
-       updateUser(User)
-    else:
-        flash("This email already has an account!")
+    updateUser(User)
 
     return render_template("index.html", popularCoins=returnPopularCoins(5))
 
