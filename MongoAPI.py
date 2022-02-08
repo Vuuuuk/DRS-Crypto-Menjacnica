@@ -1,7 +1,7 @@
 import pymongo
 from pymongo import MongoClient
 
-address = "109.121.60.29,"
+address = "79.175.94.17"
 dataBase = "CryptoMenjacnica"
 
 def connect(username : str, password : str):
@@ -39,6 +39,19 @@ def getCoin(tableName: str, coin: str, client):
         return found[0]
     else:
         return print("Error -> " + tableName + " not found.\n")
+
+def insertuser(tableName : str, key: str, user, client):
+    db = client[dataBase]
+    if(tableName in db.list_collection_names()):
+        table = db[tableName]
+        if(table.find_one({"Email" : key})):
+            return print("Error -> data already exists.\n")
+        else:
+            table.insert_one(user)
+            return print("Success -> data inserted successfully.\n")
+    else:
+        return print("Error -> " + tableName + " not found.\n")
+
 
 def insert(tableName : str, key: str, data : dict, client):
     db = client[dataBase]

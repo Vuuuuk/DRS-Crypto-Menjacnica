@@ -56,14 +56,14 @@ def register():
     AvailableCoins = {}
     if not user:
        User = {
-           "firstName" :  firsttName,
-           "surname" :  surname,
-           "address" :  address,
-           "city" :  city,
-           "state" :  state,
-           "tel" :  tel,
-           "email" :  email,
-           "password" :  password,
+           "FirstName" :  firsttName,
+           "LastName" :  surname,
+           "Address" :  address,
+           "City" :  city,
+           "State" :  state,
+           "PhoneNumber" :  tel,
+           "Email" :  email,
+           "Password" :  password,
            "AvailableCoins" : {},
            "IsVerified" : False
        }
@@ -111,20 +111,20 @@ def modify():
     state = request.form["account_state"]
     tel = request.form["account_tel"]
     email = request.form["account_email"]
-    user = returnFind("users", "email", email)
+    user = returnFind("users", "Email", email)
     if not user:
         flash("Something went wrong")
         return render_template("index.html", popularCoins=returnPopularCoins(5))
 
     User = {
-       "firstName" :  firstName,
-       "surname" :  surname,
-       "address" :  address,
-       "city" :  city,
-       "state" :  state,
-       "tel" :  tel,
-       "email" :  email,
-       "password" :  user["password"],
+       "FirstName" :  firstName,
+       "LastName" :  surname,
+       "Address" :  address,
+       "City" :  city,
+       "State" :  state,
+       "PhoneNumber" :  tel,
+       "Email" :  email,
+       "Password" :  user["password"],
        "AvailableCoind" : user["AvailableCoins"],
        "IsVerified" : user["IsVerified"]
        }
@@ -133,9 +133,32 @@ def modify():
     return render_template("index.html", popularCoins=returnPopularCoins(5))
 
 
+
+
+
 @app.route("/transfer", methods=["POST"])
 def transfer():
-    flash("Account not verified!", "info") # Status transakcije prikazati ovde ili realizovati funkcionalnost na History stranici
+    toMail = request.form["recipients_email"]
+    toAmount = request.form["recipients_amount"]
+    fromCoin = request.form["senders_available_coins"]
+    fromMail = session["user_id"]
+
+    user = returnFind("users", "Email", fromMail)
+    if not user["AvailableCoins"][fromCoin]:
+        flash("You don't have that coin","info")
+    if user["AvailableCoins"][fromCoin] < toAmount:
+        flash("You don't have that much coin")
+    else :
+        toUser = returnFind("users", "Email", toMail)
+        if not toUser["AvailableCoins"][fromCoin]:
+            toUser["AvailableCoins"][fromCoin] = toAmount
+        else :
+            toUser["AvailableCoins"][fromCoin] += toAmount
+        updateUser(toUser)
+        user["AvailableCoins"][fromCoin] -= toAmount
+        updateUser(user)
+
+
     return render_template("index.html", popularCoins=returnPopularCoins(5))
 
 #NOT IMPLEMENTED
