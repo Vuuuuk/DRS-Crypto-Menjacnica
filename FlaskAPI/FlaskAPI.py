@@ -41,9 +41,15 @@ def index():
                              + parameters["buy_availableCoins"].split("/")[0] + "&convVal=" + parameters["buy_userAmount"])
 
         balanceJson = requests.get(ipval + "userBalance?userMail=" + session["user_id"])
-        bal = json.loads(balanceJson.content)
+        try:
+            bal = json.loads(balanceJson.content)
+        except:
+            bal = {}
         coinsJson = requests.get(ipval + "/getAvailableCoins")
-        coins = json.loads(coinsJson.content)
+        try:
+            coins = json.loads(coinsJson.content)
+        except:
+            coins = {}
 
         return render_template("index.html", popularCoins=coinDataRefresh.coinData,
                                    userBalance=bal, availableCoins=coins)
@@ -62,9 +68,15 @@ def login():
     else:
         if userLoginData[0]["Password"] == userLoginData[0]["Password"]:
             balanceJson = requests.get(ipval + "userBalance?userMail=" + userLoginData[0]["Email"])
-            bal = json.loads(balanceJson.content)
+            try:
+                bal = json.loads(balanceJson.content)
+            except:
+                bal = {}
             coinsJson = requests.get(ipval + "/getAvailableCoins")
-            coins = json.loads(coinsJson.content)
+            try:
+                coins = json.loads(coinsJson.content)
+            except:
+                coins = {}
             session["user_id"] = userLoginData[0]["Email"]
             return render_template("index.html", popularCoins=coinDataRefresh.coinData,
                                    userBalance=bal, availableCoins=coins)
