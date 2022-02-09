@@ -14,7 +14,7 @@ def insertUser(User):
 
 
 def updateUser(User):
-    return updateUser("users", User["Email"], User, client)
+    return updateuser("users", User["Email"], User, client)
 
 
 def getcoin(symbol):

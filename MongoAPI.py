@@ -1,7 +1,7 @@
 import pymongo
 from pymongo import MongoClient
 
-address = "79.175.94.17"
+address = "79.175.70.227"
 dataBase = "CryptoMenjacnica"
 
 def connect(username : str, password : str):
@@ -150,11 +150,11 @@ def getCoin(tableName: str, coin: str, client):
         return print("Error -> " + tableName + " not found.\n")
 
 
-def updateUser(tableName : str, searchParam : str, updateParam, client):
+def updateuser(tableName : str, searchParam : str, updateParam, client):
     db = client[dataBase]
     if tableName in db.list_collection_names():
         table = db[tableName]
-        table.find_one_and_replace({"Email": searchParam}, {updateParam})
+        table.find_one_and_replace({"Email": searchParam}, updateParam)
         return print("Success -> data updated.\n")
     else:
         return print("Error -> " + tableName + " not found.\n")

@@ -124,9 +124,9 @@ def modify():
        "State" :  state,
        "PhoneNumber" :  tel,
        "Email" :  email,
-       "Password" :  user["password"],
-       "AvailableCoind" : user["AvailableCoins"],
-       "IsVerified" : user["IsVerified"]
+       "Password" :  user[0]["Password"],
+       "AvailableCoind" : user[0]["AvailableCoins"],
+       "IsVerified" : user[0]["IsVerified"]
        }
     updateUser(User)
 
