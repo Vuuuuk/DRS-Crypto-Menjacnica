@@ -58,7 +58,7 @@
                 <a style="all: unset; cursor: pointer" href = "{{ url_for('index') }}"><h1 class = "logo">BitEx.</h1></a>
                     <nav>
                         <ul>
-                            <li><a href = "#">Buy & Sell</a></li>
+                            <li><a href = "#buyModal" class="modal-button">Buy & Sell</a></li>
                             <li><a href = "#balanceModal" class="modal-button">Balance</a></li>
                             <li><a href = "#swapModal" class="modal-button">Swap</a></li>
                             <li><a href = "#historyModal" class="modal-button">History</a></li>
@@ -469,7 +469,7 @@
                 <p>
                     Fill out the form below to get started
                 </p>
-                <form>
+                <form action="/register" method="post">
                     <div class="modal-form">
                         <input type="text" name="register_firstname" placeholder="Your name" required>
                         <input type="text" name="register_surname" placeholder="Your surname" required><br>
@@ -531,7 +531,7 @@
                 <p>
                     Update your account details with ease
                 </p>
-                <form>
+                <form action="/modify" method="post">
                     <div class="modal-form">
                         <input type="text" name="account_firstname" required>
                         <input type="text" name="account_surname" required><br>
@@ -539,8 +539,6 @@
                         <input type="text" name="account_city" required><br>
                         <input type="text" name="account_state" required>
                         <input type="tel" pattern="^(\+381)?(\s|-)?6(([0-6]|[8-9])\d{7}|(77|78)\d{6}){1}$" name="account_tel" required><br>
-                        <input type="email" name="account_email" required>
-                        <input type="password" name="account_password" required><br>
                         <input type="submit" value="Update" class="btn btn-primary">
                     </div>
                 </form>
@@ -587,7 +585,7 @@
                 <p>
                     Swap your coins with ease
                 </p>
-                <form>
+                <form action="/swap" method="post">
                     <div class="modal-form">
                         <input type="datalist" name="swap_userCoins" placeholder="Your coins" required>
                         <input type="datalist" name="swap_availableCoins" placeholder="Available coins" required><br>
@@ -602,7 +600,7 @@
 
     <!-- SWAP MODAL -->
 
-    <!-- BALANCE MODAL -->
+        <!-- BALANCE MODAL -->
 
     <div id="balanceModal" class="modal">
         <div class="modal-content">
@@ -616,15 +614,66 @@
                 <p>
                     Watch your portfolio grow
                 </p>
-                    DINAMICKI GENERISATI NA OSNOVU PODATAKA IZ BAZE
+                    <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Symbol</th>
+                    <th>Buy</th>
+                    <th>Sell</th>
+                    <th>Balance</th>
+                    <th/>
+                </tr>
+                {% for row in userBalance %}
+                    <tr>
+                        <td>{{ row["name"] }}</td>
+                        <td>{{ row["symbol"] }}</td>
+                        <td>{{ "${:,.2f}".format(row["priceUsd"]|float) }}</td>
+                        <td>{{ "${:,.2f}".format((row["priceUsd"]|float - (row["priceUsd"]|float * 3)/100)) }}</td>
+                        <td>{{ row["balance"] }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
             </div>
         </div>
     </div>
+
+    <!-- BUY SELL MODAL -->
+
+    <div id="buyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeBtn">
+                    &times;
+                </span>
+                <h2>Buy/Sell</h2>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="modal-form">
+                        <input list="availableCoins" name="buy_availableCoins" placeholder="Available coins"
+                               id="selectedCoin" required>
+                        <datalist id="availableCoins">
+                            {% for coin in availableCoins %}
+                            <option value={{ coin["symbol"] }}/{{ coin["priceUsd"] }}>
+                            {%  endfor %}
+                        </datalist>
+                        <input name="buy_userAmount" id="amount" placeholder="Amount to purchase" required>
+                        <input name="buy_calculatedPrice" id="calculated" readonly required>
+                        <input type="button" id="check" value="Check" class="btn btn-primary">
+                        <input type="submit" value="Buy" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- BUY SELL MODAL -->
 
     <!-- SWAP MODAL -->
 
     <!-- CUSTOM MODAL -->
     <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/checkPrice.js') }}"></script>
 
 </body>
 
