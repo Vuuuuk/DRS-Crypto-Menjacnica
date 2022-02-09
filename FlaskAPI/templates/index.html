@@ -502,12 +502,12 @@
                 <p>
                     Fill out the form below to get verified
                 </p>
-                <form>
+                <form action="/verifyUser" method="post">
                     <div class="modal-form">
                         <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" name="verify_creditcard" placeholder="Credit card number" required>
                         <input type="text" name="verify_name" placeholder="Credit card name" required><br>
                         <input type="tel" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" name="verify_date" placeholder="MM / YY" required>
-                        <input type="tel" inputmode="numeric" pattern="[1-9]{3}" maxlength="3" name="verify_date" placeholder="CVC" required><br>
+                        <input type="tel" inputmode="numeric" pattern="[1-9]{3}" maxlength="3" name="verify_cvc" placeholder="CVC" required><br>
                         <input type="submit" value="Verify" class="btn btn-primary">
                     </div>
                 </form>

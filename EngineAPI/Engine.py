@@ -14,9 +14,17 @@ def returnpopularCoins():
     filterJSON("coinCapAPI", client)
     return getPopularCoins("coinCapAPI", 5, client)
 
-@engineAPI.route("/loginCheck", methods=["GET"]) #Moguce je koristiti i POST metodu, radi jednostavnije testiranja i prelaza ostavio sam ipak GET
-def returnLoginData():
+@engineAPI.route("/verifyUser", methods=["GET"])
+def returnUserVerificationStatus():
+    return verificationUpdate(request.args.get("table"), request.args.get("searchKey"), request.args.get("searchParam"), request.args.get("updateKey"), request.args.get("updateParam"), client)
+
+@engineAPI.route("/findData", methods=["GET"])
+def returnData():
     return find(request.args.get("table"), request.args.get("key"), request.args.get("searchParam"), client)
+
+@engineAPI.route("/findAllData", methods=["GET"])
+def returnAllData():
+    return dispalyAll(request.args.get("table"), client)
 
 @engineAPI.route("/transaction", methods=["GET"])
 def transaction():
@@ -42,7 +50,6 @@ def insertUser():
 @engineAPI.route("/updateUser", methods=["POST"])
 def updateUser():
     return updateuser("users", request.form["Email"], request.form, client)
-
 
 if __name__ == "__main__":
     engineAPI.run(port=5001, debug=True, host="0.0.0.0")

@@ -114,7 +114,7 @@ def dispalyAll(tableName : str, client):
     db = client[dataBase]
     if(tableName in db.list_collection_names()):
         table = db[tableName]
-        return list(table.find())
+        return json.dumps(list(table.find({}, {"_id": 0})))
     else:
         return print("Error -> " + tableName + " not found.\n")
 
@@ -187,6 +187,14 @@ def updateBalance(tableName : str, searchKey: str, searchParam : str, updateKey:
     else:
         return print("Error -> " + tableName + " not found.\n")
 
+def verificationUpdate(tableName : str, searchKey: str, searchParam : str, updateKey: str, updateParam : bool, client):
+    db = client[dataBase]
+    if(tableName in db.list_collection_names()):
+        table = db[tableName]
+        table.update_many({searchKey: searchParam}, {"$set": {updateKey: bool(updateParam)}})
+        return print("Success -> user verified.\n")
+    else:
+        return print("Error -> " + tableName + " not found.\n")
 
 def performTransaction(user1: str, user2: str, currID: str, amount: float, username: str, password: str,
                        transType: int, transCurr: str, transVal: str):
