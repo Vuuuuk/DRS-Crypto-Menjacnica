@@ -1,7 +1,8 @@
 import pymongo
+import json
 from pymongo import MongoClient
 
-address = "77.105.59.252"
+address = "79.175.94.17"
 dataBase = "CryptoMenjacnica"
 
 def connect(username : str, password : str):
@@ -102,7 +103,7 @@ def find(tableName : str, key: str, searchParam : str, client):
     db = client[dataBase]
     if(tableName in db.list_collection_names()):
         table = db[tableName]
-        return list(table.find({key: searchParam}))
+        return json.dumps(list(table.find({key: searchParam}, {"_id": 0})))
     else:
         return print("Error -> " + tableName + " not found.\n")
 
@@ -129,6 +130,6 @@ def getPopularCoins(tableName: str, numOfCoins: int, client):
     db = client[dataBase]
     if(tableName in db.list_collection_names()):
         table = db[tableName]
-        return list(table.find({}, {"_id": 0, "rank": 0}).limit(numOfCoins))
+        return json.dumps(list(table.find({}, {"_id": 0, "rank": 0}).limit(numOfCoins)))
     else:
         return print("Error -> " + tableName + " not found.\n")

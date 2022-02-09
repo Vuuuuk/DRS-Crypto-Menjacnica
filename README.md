@@ -10,7 +10,7 @@ Implementacija treba da sadrži 3 komponente:
 
 ## Dizajn sistema
 
-![DRS - Crypto menjačnica](https://i.ibb.co/zhYdCRK/DRS-Crypto-menjacnica.png)
+![DRS - Crypto menjačnica](https://i.ibb.co/qJ3D8cL/Dizajn-servisa-DRS.png)
 
 ## Formatiranje GitHub repozitorijuma
  
