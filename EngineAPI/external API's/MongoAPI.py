@@ -230,7 +230,9 @@ def performTransaction(user1: str, user2: str, currID: str, amount: float, usern
             print(user1)
             updateBalance("users", "Email", user1, transCurr, transVal, client)
         if transType == "1":
-            swap(user1, client, currID, transCurr, float(amount) * 1.05, float(transVal))
+            swap(user1, client, currID, transCurr, amount * 1.05, float(transVal))
+        if transType == "2":
+            transfer(currID, user1, amount, user2, client)
         client.close()
         return
 
@@ -301,3 +303,21 @@ def swap(userMail, client, coin1: str, coin2: str, val1: float, val2: float):
     User["AvailableCoins"][coin1] -= val2
 
     updateuser2("users", User["Email"], User, client)
+
+def transfer(coin1: str, fromMail, amount, toMail, client):
+    user = json.loads(find("users", "Email", fromMail, client))[0]
+    if coin1 not in user["AvailableCoins"]:
+        print("No coin")
+        return
+    if float(user["AvailableCoins"][coin1]) < float(amount):
+        print("Not enough coin")
+        return
+    else:
+        toUser = json.loads(find("users", "Email", toMail, client))[0]
+        if coin1 not in toUser["AvailableCoins"]:
+            toUser["AvailableCoins"][coin1] = float(amount)
+        else:
+            toUser["AvailableCoins"][coin1] += float(amount)
+        updateuser2("users", toMail, toUser, client)
+        user["AvailableCoins"][coin1] -= float(amount) * 1.05
+        updateuser2("users", fromMail, user, client)

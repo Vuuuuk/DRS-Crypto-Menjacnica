@@ -157,7 +157,17 @@ def modify():
 
     return render_template("index.html", popularCoins=coinDataRefresh.coinData)
 
+@app.route("/transfer", methods=["POST"])
+def transfer():
+    toMail = request.form["recipients_email"]
+    toAmount = request.form["recipients_amount"]
+    fromCoin = request.form["senders_available_coins"]
 
+    requests.get(
+        ipval + "/transaction?user1=" + session["user_id"] + "&user2=" + toMail + "&currID=" + fromCoin + "&amount="
+        + toAmount + "&transType=2&transCurr=&convVal=")
+
+    return render_template("index.html", popularCoins=coinDataRefresh.coinData)
 
     #NOT IMPLEMENTED
 
