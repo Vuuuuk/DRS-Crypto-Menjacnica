@@ -111,7 +111,7 @@ def dispalyAll(tableName : str, client):
     db = client[dataBase]
     if(tableName in db.list_collection_names()):
         table = db[tableName]
-        return list(table.find())
+        return json.dumps(list(table.find({}, {"_id": 0})))
     else:
         return print("Error -> " + tableName + " not found.\n")
 
@@ -123,14 +123,16 @@ def update(tableName : str, searchParam : str, updateParam : str, client):
         return print("Success -> data updated.\n")
     else:
         return print("Error -> " + tableName + " not found.\n")
-def updateVerify(tableName : str, searchKey: str, searchParam : str, updateKey: str, updateParam : bool, client):
+
+def verificationUpdate(tableName : str, searchKey: str, searchParam : str, updateKey: str, updateParam : bool, client):
     db = client[dataBase]
     if(tableName in db.list_collection_names()):
         table = db[tableName]
-        table.update_many({searchKey: searchParam}, {"$set": {updateKey: updateParam}})
-        return print("Success -> data updated.\n")
+        table.update_many({searchKey: searchParam}, {"$set": {updateKey: bool(updateParam)}})
+        return print("Success -> user verified.\n")
     else:
         return print("Error -> " + tableName + " not found.\n")
+
 ########################################################################################################################
 
 def getPopularCoins(tableName: str, numOfCoins: int, client):
@@ -138,12 +140,5 @@ def getPopularCoins(tableName: str, numOfCoins: int, client):
     if(tableName in db.list_collection_names()):
         table = db[tableName]
         return json.dumps(list(table.find({}, {"_id": 0, "rank": 0}).limit(numOfCoins)))
-    else:
-        return print("Error -> " + tableName + " not found.\n")
-def getAllCoins(tableName: str, client):
-    db = client[dataBase]
-    if(tableName in db.list_collection_names()):
-        table = db[tableName]
-        return list(table.find({}))
     else:
         return print("Error -> " + tableName + " not found.\n")

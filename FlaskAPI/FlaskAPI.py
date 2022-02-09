@@ -38,7 +38,7 @@ def login():
     session.pop("user_id", None)
 
     loginPayload = {"table": "users", "key": "Email", "searchParam": request.form["login_email"]}
-    userLoginDataRaw = requests.get("http://0.0.0.0:5001/loginCheck", params=loginPayload)
+    userLoginDataRaw = requests.get("http://127.0.0.1:5001/findData", params=loginPayload)
     userLoginData = json.loads(userLoginDataRaw.content)
 
     if not userLoginData:
@@ -70,6 +70,36 @@ def transfer():
     return render_template("index.html", popularCoins=coinDataRefresh.coinData)
 
     #NOT IMPLEMENTED
+
+@app.route("/verifyUser", methods=["POST"])
+def verify():
+    transactionPayload = {"table": "transactions"}
+    transactionDataRaw = requests.get("http://127.0.0.1:5001/findAllData", params=transactionPayload)
+
+    transactionData = json.loads(transactionDataRaw.content)
+
+    creditCardPayload = {"table": "ccards", "key": "Number", "searchParam": request.form["verify_creditcard"]}
+    creditCardDataRaw = requests.get("http://127.0.0.1:5001/findData", params=creditCardPayload)
+    creditCardData = json.loads(creditCardDataRaw.content)
+
+    userPayload = {"table": "users", "key": "Email", "searchParam": session["user_id"]}
+    userDataRaw = requests.get("http://127.0.0.1:5001/findData", params=userPayload)
+    userData = json.loads(userDataRaw.content)
+
+    if not creditCardData:
+        flash("Unable to verify invalid card number!", "info")
+    else:
+        if request.form["verify_name"] == userData[0]["FirstName"] and creditCardData[0]["Date"] == str(request.form["verify_date"]) and creditCardData[0]["CVC"] == str(request.form["verify_cvc"]):
+            if(userData[0]["IsVerified"]):
+                flash("You are already verified!", "info")
+            else:
+                updatePayload = {"table": "users", "searchKey": "FirstName", "searchParam": userData[0]["FirstName"], "updateKey": "IsVerified", "updateParam": True}
+                requests.get("http://127.0.0.1:5001/verifyUser", params=updatePayload)
+                return render_template("index.html", popularCoins=coinDataRefresh.coinData, transactionHistory=transactionData)
+        else:
+            flash("Unable to verify invalid card parameters!", "info")
+
+    return render_template("index.html", popularCoins=coinDataRefresh.coinData, transactionHistory=transactionData)
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True, host="0.0.0.0")
