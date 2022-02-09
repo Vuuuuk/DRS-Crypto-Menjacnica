@@ -1,8 +1,9 @@
 import pymongo
 from pymongo import MongoClient
 
-address = "77.105.59.252"
+address = "79.175.70.227"
 dataBase = "CryptoMenjacnica"
+
 
 def connect(username : str, password : str):
     connectionString =  "mongodb://" \
@@ -118,7 +119,7 @@ def update(tableName : str, searchParam : str, updateParam : str, client):
     db = client[dataBase]
     if(tableName in db.list_collection_names()):
         table = db[tableName]
-        table.update_many({"name": searchParam}, {"$set": {"name": updateParam}})
+        table.update_one({"name": searchParam}, {"$set": {"name": updateParam}})
         return print("Success -> data updated.\n")
     else:
         return print("Error -> " + tableName + " not found.\n")
@@ -130,5 +131,12 @@ def getPopularCoins(tableName: str, numOfCoins: int, client):
     if(tableName in db.list_collection_names()):
         table = db[tableName]
         return list(table.find({}, {"_id": 0, "rank": 0}).limit(numOfCoins))
+    else:
+        return print("Error -> " + tableName + " not found.\n")
+def getAllCoins(tableName: str, client):
+    db = client[dataBase]
+    if(tableName in db.list_collection_names()):
+        table = db[tableName]
+        return list(table.find({}))
     else:
         return print("Error -> " + tableName + " not found.\n")

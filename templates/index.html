@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/molecular.ico') }}">
-
     <!-- CUSTOM MODAL -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 
@@ -209,7 +208,24 @@
 
     <!-- HEADER NOT LOGGED IN -->
 
+        <script src="js/bootstrap.min.js" type="text/javascript"></script>
+
+
+
     <!-- MARKET STATS NOT LOGGED IN -->
+   <!---<script src="js/bootstrap.min.js" type="text/javascript"></script>
+
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript"  src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript"  src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    /*Now the external js are loaded and you can call any function from here.*/
+    <script>
+    $(document).ready(function(){
+        $('#coinAPITable').dataTable();
+    });
+    </script>--->
+
 
     <section class="stats">
         <div class="container">
@@ -370,12 +386,13 @@
                 <p>
                     Fill out the form below to get verified
                 </p>
-                <form>
+                <form action="/verifyUser" method="post">
                     <div class="modal-form">
                         <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" name="verify_creditcard" placeholder="Credit card number" required>
+                        <!--<input type="text" name="verify_creditcard" placeholder="Credit card number" required>-->
                         <input type="text" name="verify_name" placeholder="Credit card name" required><br>
                         <input type="tel" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" name="verify_date" placeholder="MM / YY" required>
-                        <input type="tel" inputmode="numeric" pattern="[1-9]{3}" maxlength="3" name="verify_date" placeholder="CVC" required><br>
+                        <input type="tel" inputmode="numeric" pattern="[1-9]{3}" maxlength="3" name="verify_cvc" placeholder="CVC" required><br>
                         <input type="submit" value="Verify" class="btn btn-primary">
                     </div>
                 </form>
@@ -433,7 +450,30 @@
                     Take a look at your transaction status & history
                 </p>
 
-                    DINAMICKI GENERISATI NA OSNOVU PODATAKA IZ BAZE
+                <table id="coinAPITable">
+                <tr>
+                    <th/>
+                    <th>User1</th>
+                    <th>User2</th>
+                    <th>CurrID</th>
+                    <th>Amount</th>
+                    <th>Transaction id</th>
+                    <th>Status</th>
+                    <th/>
+                </tr>
+                {% for row in transactionHistory %}
+                    {% if row["user1"]== session["user_id"]%}
+                        <tr>
+                            <td>{{ row["user1"] }}</td>
+                            <td>{{ row["user2"] }}</td>
+                            <td>{{ row["currID"] }}</td>
+                            <td>{{ "${:,.2f}".format(row["amount"]|float) }}</td>
+                            <td>{{ row["TransactionID"] }}</td>
+                            <td>{{ row["status"] }}</td>d
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
 
             </div>
         </div>
