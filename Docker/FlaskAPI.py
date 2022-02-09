@@ -8,7 +8,7 @@ app.secret_key = "secretkey" #ANTI-COOKIE tampering, eventually has to be moved 
 
 def coinDataRefresh():
     while True:
-        coinDataRaw = requests.get("http://127.0.0.1:5001/coinCapAPI")
+        coinDataRaw = requests.get("http://engine:5001/coinCapAPI")
         if(coinDataRaw.ok):
             coinDataRefresh.coinData = json.loads(coinDataRaw.content)
             time.sleep(60)
@@ -16,7 +16,7 @@ def coinDataRefresh():
             print("CoinCapAPI request failed with error -> ", coinDataRaw.status_code)
 
 coinDataRefreshThread = threading.Thread(target=coinDataRefresh)
-coinDataRefreshThread.setDaemon(True)
+coinDataRefreshThread.daemon = True
 coinDataRefreshThread.start()
 
 @app.route("/refreshMarketStatsLoggedIn", methods=["POST"])
@@ -38,7 +38,7 @@ def login():
     session.pop("user_id", None)
 
     loginPayload = {"table": "users", "key": "Email", "searchParam": request.form["login_email"]}
-    userLoginDataRaw = requests.get("http://0.0.0.0:5001/loginCheck", params=loginPayload)
+    userLoginDataRaw = requests.get("http://engine:5001/loginCheck", params=loginPayload)
     userLoginData = json.loads(userLoginDataRaw.content)
 
     if not userLoginData:

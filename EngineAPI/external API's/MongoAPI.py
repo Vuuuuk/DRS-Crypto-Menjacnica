@@ -1,8 +1,7 @@
-import pymongo
 import json
 from pymongo import MongoClient
 
-address = "79.175.94.17"
+address = "79.175.70.227"
 dataBase = "CryptoMenjacnica"
 
 def connect(username : str, password : str):

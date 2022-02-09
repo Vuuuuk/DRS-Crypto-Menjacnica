@@ -1,0 +1,12 @@
+version: "3"
+services:
+  engine:
+    build: ./EngineAPI
+    ports:
+      - "5001:5001"
+  front:
+    build: ./FlaskAPI
+    links:
+      - engine
+    ports:
+      - "5000:5000"
