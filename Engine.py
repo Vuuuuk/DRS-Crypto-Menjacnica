@@ -19,9 +19,8 @@ def returnFind(tableName: str, key: str, searchParam: str):
 def returnFindAll(tableName: str):
     return dispalyAll(tableName, client)
 
-def updateElement(tableName : str, searchParam : str, updateParam : str):
-    return update(tableName,searchParam,updateParam,client)
-
+def returnUpdateVerify(tableName : str, searchKey:str, searchParam : str, updateKey:str, updateParam : bool):
+    return updateVerify(tableName, searchKey, searchParam, updateKey, updateParam, client)
 
 def closeMongoConnection():
     client.close()

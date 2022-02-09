@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, flash
-from Engine import returnPopularCoins, returnFind, closeMongoConnection, returnAllCoins, returnFindAll, updateElement
+from Engine import returnPopularCoins, returnFind, closeMongoConnection, returnAllCoins, returnFindAll, returnUpdateVerify
 from livereload import Server
 
 app = Flask(__name__)
@@ -54,7 +54,7 @@ def verify():
         flash("Unable to verify! Invalid card number!", "info")
     else:
         if name == user[0]["FirstName"] and card[0]["Date"] == str(date) and card[0]["CVC"] == str(cvc):
-            updateElement("users", "IsVerified", "true")
+            returnUpdateVerify("users", "FirstName" , user[0]["FirstName"], "IsVerified", True)
             return render_template("index.html", popularCoins=returnPopularCoins(5), transactionHistory=returnFindAll("transactions"))
         else:
             flash("Unable to verify! Invalid card parameters!", "info")

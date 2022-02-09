@@ -123,7 +123,14 @@ def update(tableName : str, searchParam : str, updateParam : str, client):
         return print("Success -> data updated.\n")
     else:
         return print("Error -> " + tableName + " not found.\n")
-
+def updateVerify(tableName : str, searchKey: str, searchParam : str, updateKey: str, updateParam : bool, client):
+    db = client[dataBase]
+    if(tableName in db.list_collection_names()):
+        table = db[tableName]
+        table.update_many({searchKey: searchParam}, {"$set": {updateKey: updateParam}})
+        return print("Success -> data updated.\n")
+    else:
+        return print("Error -> " + tableName + " not found.\n")
 ########################################################################################################################
 
 def getPopularCoins(tableName: str, numOfCoins: int, client):
