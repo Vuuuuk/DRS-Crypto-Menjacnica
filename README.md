@@ -43,28 +43,3 @@ Implementacija treba da sadrži 3 komponente:
 ## Formatiranje koda
 1. camelCase notacija, kapitalizacija prvog slova druge reči.
 2. Pridržavanje pravilnika ocenjivanja (broja klasa u skripti itd...).
-
-## Pravilnik ocenjivanja
-
-1. Više od 3 klase u jednoj skripti -5 bodova.
-2. Zamrzavanje aplikacije prilikom prezentovanja -2 boda.
-3. Pojedina ima manje od 3 commit-a -5 bodova.
-4. Pojedinac nema commit-ove - pao.
-5. Usmeni 4/5 pitanja odgovoreno tačno -1 bod.
-6. Usmeni 3/5 pitanja odgovoreno tačno -3 boda.
-7. Usmeni 2/5 pitanja odgovoreno tačno -6 bodova.
-8. Usmeni 1/5 pitanja odgovoreno tačno -pao.
-9. Nepoznavanje koda -5 bodova.
-10. Naknadna odbrana -15 bodova.
-
-## Bodovanje
-
-1. Aplikacija je funkcionalna I postoji Flask aplikacija – 51 poen.
-2. Implementiran Engine kao posebna Flask aplikacija gde UI komunicira sa Engine-om
-putem API-a – 10 poena.
-3. Implementirana je baza sa kojom komunicira Engine – 9 poena.
-4. Koriscenje niti prilikom implementacije – 10 poena.
-5. Koriscenje procesa prilikom implementacije – 10 poena.
-6. Dokerizacija aplikacije I pokretanje na vise racunara (distribuiran sistem) – 10 poena.
-7. Deploy aplikacije na Heroku – gratis 5 poena (moguce samo ako je svih 6 tacaka
-implementirano).
