@@ -1,0 +1,78 @@
+    <section class="stats" id="marketStatsLoggedIn">
+        <div class="container">
+            <h2 class="text-center my-4">
+                Track the Market and Watch Your Portfolio Grow
+            </h2>
+        </div>
+        <div class="my-1">
+            <table>
+                <tr>
+                    <th/>
+                    <th>Name</th>
+                    <th>Symbol</th>
+                    <th>Buy</th>
+                    <th>Sell</th>
+                    <th/>
+                </tr>
+                {% for row in popularCoins %}
+                    <tr>
+                        <td>
+                            {% if 'BNB' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/binance-coin-bnb-logo.svg?v=018"}}>
+                            {% elif 'Polkadot' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/polkadot-new-dot-logo.svg?v=018"}}>
+                            {% elif 'Terra' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/terra-luna-luna-logo.svg?v=018"}}>
+                            {% elif 'Crypto.com Coin' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/crypto-com-coin-cro-logo.svg?v=018"}}>
+                            {% elif 'TerraUSD' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/utrust-utk-logo.svg?v=018"}}>
+                            {% elif 'Bitcoin BEP2' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/ptokens-btc-pbtc-logo.svg?v=018"}}>
+                            {% elif 'Elrond' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/elrond-egld-egld-logo.svg?v=018"}}>
+                            {% elif 'TrustNote' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/the-transfer-token-ttt-logo.svg?v=018"}}>
+                            {% elif 'BitTorrent' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/bittorrent-btt-logo.svg?v=018"}}>
+                            {% elif 'Huobi BTC' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/hedera-hbar-logo.svg?v=018"}}>
+                            {% elif 'Convex Finance' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/civic-cvc-logo.svg?v=018"}}>
+                            {% elif 'ECOMI' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/thorecoin-thr-logo.svg?v=018"}}>
+                            {% elif 'Mina' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/gemini-dollar-gusd-logo.svg?v=018"}}>
+                            {% elif 'Symbol' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/xyo-xyo-logo.svg?v=018"}}>
+                            {% elif 'Pax Dollar' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/paxos-standard-usdp-logo.svg?v=018"}}>
+                            {% elif 'yearn.finance' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/yearn-finance-yfi-logo.svg?v=018"}}>
+                            {% elif '1inch Network' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/1inch-1inch-logo.svg?v=018"}}>
+                            {% elif 'WEMIX' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/power-ledger-powr-logo.svg?v=018"}}>
+                            {% else %}
+                                <img src= {{"https://cryptologos.cc/logos/%s-%s-logo.svg?v=014"|format(row["name"]|lower|replace(" ","-"),row["symbol"]|lower)}}>
+                            {% endif %}
+                        </td>
+                        <td>{{ row["name"] }}</td>
+                        <td>{{ row["symbol"] }}</td>
+                        <td>{{ "${:,.2f}".format(row["priceUsd"]|float) }}</td>
+                        <td>{{ "${:,.2f}".format((row["priceUsd"]|float - (row["priceUsd"]|float * 3)/100)) }}</td>
+                        <td>
+                            <form>
+                                <a class="btn btn-market">Buy / Sell</a>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="allMarketStats py-2">
+            <a style="color: var(--primary-color)" href="#">View All Markets</a>
+        </div>
+
+    </section>

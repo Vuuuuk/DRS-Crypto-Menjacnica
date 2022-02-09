@@ -1,4 +1,4 @@
-import pymongo
+import json
 from pymongo import MongoClient
 
 address = "79.175.70.227"
@@ -103,7 +103,7 @@ def find(tableName : str, key: str, searchParam : str, client):
     db = client[dataBase]
     if(tableName in db.list_collection_names()):
         table = db[tableName]
-        return list(table.find({key: searchParam}))
+        return json.dumps(list(table.find({key: searchParam}, {"_id": 0})))
     else:
         return print("Error -> " + tableName + " not found.\n")
 
@@ -137,7 +137,7 @@ def getPopularCoins(tableName: str, numOfCoins: int, client):
     db = client[dataBase]
     if(tableName in db.list_collection_names()):
         table = db[tableName]
-        return list(table.find({}, {"_id": 0, "rank": 0}).limit(numOfCoins))
+        return json.dumps(list(table.find({}, {"_id": 0, "rank": 0}).limit(numOfCoins)))
     else:
         return print("Error -> " + tableName + " not found.\n")
 def getAllCoins(tableName: str, client):

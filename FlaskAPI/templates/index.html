@@ -12,6 +12,10 @@
     <!-- CUSTOM MODAL -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 
+    <!-- AJAX FOR AUTOMATIC MARKET STATS REFRESH -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+
     <title>BitEx | Fastest & Safest Crypto Retailer</title>
 
 </head>
@@ -19,6 +23,32 @@
 <body>
 
     {% if session["user_id"]|length %}
+
+    <!-- AJAX FOR AUTOMATIC MARKET STATS REFRESH -->
+
+    <script>
+
+        $(function(){
+            window.setInterval(function(){
+                refreshMarketStats()
+        }, 30000)
+
+        function refreshMarketStats(){
+            $.ajax({
+                url: "/refreshMarketStatsLoggedIn",
+                type: "POST",
+                dataType: "json",
+                success: function(data){
+                    console.log("Refreshing - logged in...")
+                    $(marketStatsLoggedIn).replaceWith(data)
+                }
+            });
+        }
+        });
+
+    </script>
+
+    <!-- AJAX FOR AUTOMATIC MARKET STATS REFRESH -->
 
     <!-- MENU LOGGED IN-->
 
@@ -86,7 +116,7 @@
 
     <!-- MARKET STATS LOGGED IN -->
 
-    <section class="stats">
+    <section class="stats" id="marketStatsLoggedIn">
         <div class="container">
             <h2 class="text-center my-4">
                 Track the Market and Watch Your Portfolio Grow
@@ -105,7 +135,45 @@
                 {% for row in popularCoins %}
                     <tr>
                         <td>
-                            <img src= {{"https://cryptologos.cc/logos/%s-%s-logo.svg?v=014"|format(row["name"]|lower|replace(" ","-"),row["symbol"]|lower)}}>
+                            {% if 'BNB' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/binance-coin-bnb-logo.svg?v=018"}}>
+                            {% elif 'Polkadot' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/polkadot-new-dot-logo.svg?v=018"}}>
+                            {% elif 'Terra' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/terra-luna-luna-logo.svg?v=018"}}>
+                            {% elif 'Crypto.com Coin' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/crypto-com-coin-cro-logo.svg?v=018"}}>
+                            {% elif 'TerraUSD' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/utrust-utk-logo.svg?v=018"}}>
+                            {% elif 'Bitcoin BEP2' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/ptokens-btc-pbtc-logo.svg?v=018"}}>
+                            {% elif 'Elrond' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/elrond-egld-egld-logo.svg?v=018"}}>
+                            {% elif 'TrustNote' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/the-transfer-token-ttt-logo.svg?v=018"}}>
+                            {% elif 'BitTorrent' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/bittorrent-btt-logo.svg?v=018"}}>
+                            {% elif 'Huobi BTC' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/hedera-hbar-logo.svg?v=018"}}>
+                            {% elif 'Convex Finance' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/civic-cvc-logo.svg?v=018"}}>
+                            {% elif 'ECOMI' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/thorecoin-thr-logo.svg?v=018"}}>
+                            {% elif 'Mina' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/gemini-dollar-gusd-logo.svg?v=018"}}>
+                            {% elif 'Symbol' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/xyo-xyo-logo.svg?v=018"}}>
+                            {% elif 'Pax Dollar' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/paxos-standard-usdp-logo.svg?v=018"}}>
+                            {% elif 'yearn.finance' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/yearn-finance-yfi-logo.svg?v=018"}}>
+                            {% elif '1inch Network' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/1inch-1inch-logo.svg?v=018"}}>
+                            {% elif 'WEMIX' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/power-ledger-powr-logo.svg?v=018"}}>
+                            {% else %}
+                                <img src= {{"https://cryptologos.cc/logos/%s-%s-logo.svg?v=014"|format(row["name"]|lower|replace(" ","-"),row["symbol"]|lower)}}>
+                            {% endif %}
                         </td>
                         <td>{{ row["name"] }}</td>
                         <td>{{ row["symbol"] }}</td>
@@ -149,6 +217,32 @@
     <!-- ADDITIONAL INFO LOGGED IN -->
 
     {% else %}
+
+    <!-- AJAX FOR AUTOMATIC MARKET STATS REFRESH -->
+
+    <script>
+
+        $(function(){
+            window.setInterval(function(){
+                refreshMarketStats()
+        }, 30000)
+
+        function refreshMarketStats(){
+            $.ajax({
+                url: "/refreshMarketStatsNotLoggedIn",
+                type: "POST",
+                dataType: "json",
+                success: function(data){
+                    console.log("Refreshing - not logged in...")
+                    $(MarketStatsNotLoggedIn).replaceWith(data)
+                }
+            });
+        }
+        });
+
+    </script>
+
+    <!-- AJAX FOR AUTOMATIC MARKET STATS REFRESH -->
 
     <!-- MENU NOT LOGGED IN -->
 
@@ -227,7 +321,7 @@
     </script>--->
 
 
-    <section class="stats">
+    <section class="stats" id="MarketStatsNotLoggedIn">
         <div class="container">
             <h2 class="text-center my-1">
                 Coins Sent to your Private Wallet Within Minutes
@@ -246,7 +340,45 @@
                 {% for row in popularCoins %}
                     <tr>
                         <td>
-                            <img src= {{"https://cryptologos.cc/logos/%s-%s-logo.svg?v=014"|format(row["name"]|lower|replace(" ","-"),row["symbol"]|lower)}}>
+                            {% if 'BNB' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/binance-coin-bnb-logo.svg?v=018"}}>
+                            {% elif 'Polkadot' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/polkadot-new-dot-logo.svg?v=018"}}>
+                            {% elif 'Terra' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/terra-luna-luna-logo.svg?v=018"}}>
+                            {% elif 'Crypto.com Coin' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/crypto-com-coin-cro-logo.svg?v=018"}}>
+                            {% elif 'TerraUSD' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/utrust-utk-logo.svg?v=018"}}>
+                            {% elif 'Bitcoin BEP2' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/ptokens-btc-pbtc-logo.svg?v=018"}}>
+                            {% elif 'Elrond' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/elrond-egld-egld-logo.svg?v=018"}}>
+                            {% elif 'TrustNote' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/the-transfer-token-ttt-logo.svg?v=018"}}>
+                            {% elif 'BitTorrent' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/bittorrent-btt-logo.svg?v=018"}}>
+                            {% elif 'Huobi BTC' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/hedera-hbar-logo.svg?v=018"}}>
+                            {% elif 'Convex Finance' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/civic-cvc-logo.svg?v=018"}}>
+                            {% elif 'ECOMI' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/thorecoin-thr-logo.svg?v=018"}}>
+                            {% elif 'Mina' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/gemini-dollar-gusd-logo.svg?v=018"}}>
+                            {% elif 'Symbol' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/xyo-xyo-logo.svg?v=018"}}>
+                            {% elif 'Pax Dollar' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/paxos-standard-usdp-logo.svg?v=018"}}>
+                            {% elif 'yearn.finance' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/yearn-finance-yfi-logo.svg?v=018"}}>
+                            {% elif '1inch Network' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/1inch-1inch-logo.svg?v=018"}}>
+                            {% elif 'WEMIX' == row["name"] %}
+                                <img src= {{"https://cryptologos.cc/logos/power-ledger-powr-logo.svg?v=018"}}>
+                            {% else %}
+                                <img src= {{"https://cryptologos.cc/logos/%s-%s-logo.svg?v=014"|format(row["name"]|lower|replace(" ","-"),row["symbol"]|lower)}}>
+                            {% endif %}
                         </td>
                         <td>{{ row["name"] }}</td>
                         <td>{{ row["symbol"] }}</td>
