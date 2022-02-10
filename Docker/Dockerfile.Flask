@@ -1,6 +1,6 @@
 FROM python
 
-WORKDIR /flask
+WORKDIR /flaskAPI
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 EXPOSE 5000

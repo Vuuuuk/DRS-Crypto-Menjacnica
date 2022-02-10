@@ -4,7 +4,7 @@ services:
     build: ./EngineAPI
     ports:
       - "5001:5001"
-  front:
+  flask:
     build: ./FlaskAPI
     links:
       - engine
