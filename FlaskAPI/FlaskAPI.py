@@ -12,6 +12,7 @@ def dataRefresh():
     while True:
         coinDataRaw = requests.get("http://127.0.0.1:5001/coinCapAPI")
         transactionDataRaw = requests.get("http://127.0.0.1:5001/findAllData", params=transactionPayload)
+
         if(coinDataRaw.ok):
             dataRefresh.coinData = json.loads(coinDataRaw.content)
         else:
@@ -20,6 +21,7 @@ def dataRefresh():
             dataRefresh.transactionData = json.loads(transactionDataRaw.content)
         else:
             print("Transaction history refresh request failed with error -> ", transactionDataRaw.status_code)
+
         time.sleep(60)
 
 coinDataRefreshThread = threading.Thread(target=dataRefresh)

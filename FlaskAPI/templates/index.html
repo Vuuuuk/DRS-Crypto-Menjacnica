@@ -77,6 +77,7 @@
 
         <!-- AJAX FOR AUTOMATIC TRANSACTION LOG REFRESH -->
 
+
     <!-- MENU LOGGED IN-->
 
         <div class = "navbar">
@@ -208,7 +209,7 @@
                         <td>{{ "${:,.2f}".format((row["priceUsd"]|float - (row["priceUsd"]|float * 3)/100)) }}</td>
                         <td>
                             <form>
-                                <a class="btn btn-market">Buy / Sell</a>
+                                <a href = "#buyModal" class="btn btn-market modal-button">Buy / Sell</a>
                             </form>
                         </td>
                     </tr>
@@ -545,7 +546,7 @@
 
     <!-- PROFILE MODAL -->
 
-    <div id="profileModal" class="modal">
+    <div id="profileModal" class="modal" >
         <div class="modal-content">
             <div class="modal-header">
                 <span class="closeBtn">
@@ -559,12 +560,12 @@
                 </p>
                 <form action="/modify" method="post">
                     <div class="modal-form">
-                        <input type="text" name="account_firstname" required>
-                        <input type="text" name="account_surname" required><br>
-                        <input type="text" name="account_address" required>
-                        <input type="text" name="account_city" required><br>
-                        <input type="text" name="account_state" required>
-                        <input type="tel" pattern="^(\+381)?(\s|-)?6(([0-6]|[8-9])\d{7}|(77|78)\d{6}){1}$" name="account_tel" required><br>
+                        <input type="text" name="account_firstname" placeholder="Your name" required>
+                        <input type="text" name="account_surname" placeholder="Your surname" required><br>
+                        <input type="text" name="account_address" placeholder="Your address" required>
+                        <input type="text" name="account_city" placeholder="City" required><br>
+                        <input type="text" name="account_state" placeholder="State" required>
+                        <input type="tel" pattern="^(\+381)?(\s|-)?6(([0-6]|[8-9])\d{7}|(77|78)\d{6}){1}$" name="account_tel" placeholder="Your phone number" required><br>
                         <input type="submit" value="Update" class="btn btn-primary">
                     </div>
                 </form>
@@ -659,40 +660,51 @@
 
     <!-- BALANCE MODAL -->
 
-    <div id="balanceModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="closeBtn">
-                    &times;
-                </span>
-                <h2>Account balance</h2>
-            </div>
-            <div class="modal-body">
-                <p>
-                    Watch your portfolio grow
-                </p>
-                    <table>
-                <tr>
-                    <th>Name</th>
-                    <th>Symbol</th>
-                    <th>Buy</th>
-                    <th>Sell</th>
-                    <th>Balance</th>
-                    <th/>
-                </tr>
-                {% for row in userBalance %}
-                    <tr>
-                        <td>{{ row["name"] }}</td>
-                        <td>{{ row["symbol"] }}</td>
-                        <td>{{ "${:,.2f}".format(row["priceUsd"]|float) }}</td>
-                        <td>{{ "${:,.2f}".format((row["priceUsd"]|float - (row["priceUsd"]|float * 3)/100)) }}</td>
-                        <td>{{ row["balance"] }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
+    <section class="stats" id="balanceModalRefreshing" style="margin-top: -5rem">
+        <div id="balanceModal" class="modal" class="my-1">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="closeBtn">
+                        &times;
+                    </span>
+                    <h1>Account balance</h1>
+                </div>
+                <div class="modal-body">
+
+                    <h1 style="font-size: 23px" class="text-center my-2">
+                        Watch your portfolio grow
+                    </h1>
+
+                    {% if userBalance is defined and userBalance|length %}
+
+                        <table id="balanceTable">
+                            <tr>
+                                <th>Name</th>
+                                <th>SYM</th>
+                                <th>AMT</th>
+                                <th>Value</th>
+                            </tr>
+                            {% for row in userBalance %}
+                                <tr>
+                                    <td>{{ row["name"] }}</td>
+                                    <td>{{ row["symbol"] }}</td>
+                                    <td>{{ row["balance"] }}</td>
+                                    <td>{{ "${:,.2f}".format(row["priceUsd"]|float * row["balance"]|float) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+
+                    {% else %}
+
+                        <p>No balance yet...</p>
+
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- BALANCE MODAL -->
 
     <!-- BUY SELL MODAL -->
 
@@ -716,7 +728,7 @@
                         </datalist>
                         <input name="buy_userAmount" id="amount" placeholder="Amount to purchase" required>
                         <input name="buy_calculatedPrice" id="calculated" readonly required>
-                        <input type="button" id="check" value="Check" class="btn btn-primary">
+                        <input type="button" style="background-color: #292C6D; color: #F6E9ED" id="check" value="Check" class="btn btn-primary">
                         <input type="submit" value="Buy" class="btn btn-primary">
                     </div>
                 </form>

@@ -203,10 +203,16 @@ def performTransaction(user1: str, user2: str, currID: str, amount: float, usern
     table = db["transactions"]
     userTable = db["users"]
     user1get = list(userTable.find({"Email": user1}, {"_id": 0}))[0]
-    if user2 != "Bitex":
-        user2get = list(userTable.find({"Email": user2}, {"_id": 0}))[0]
+    if user2 != "Menjacnica":
+        user2get = list(userTable.find({"Email": user2}, {"_id": 0}))
+        if not user2get:
+            print("Transaction error -> no such user in database")
+            return
+        else:
+            user2get = user2get[0]
     else:
-        user2get = "Bitex"
+        user2get = "Menjacnica"
+
     transaction = dict()
     transaction["user1"] = user1
     transaction["user2"] = user2
