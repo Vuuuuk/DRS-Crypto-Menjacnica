@@ -5,7 +5,7 @@ from time import sleep
 from pymongo import MongoClient
 from Cryptodome.Hash import keccak
 
-address = "79.175.70.227"
+address = "77.105.56.5"
 dataBase = "CryptoMenjacnica"
 
 def connect(username : str, password : str):
@@ -203,22 +203,25 @@ def performTransaction(user1: str, user2: str, currID: str, amount: float, usern
     table = db["transactions"]
     userTable = db["users"]
     user1get = list(userTable.find({"Email": user1}, {"_id": 0}))[0]
-    if user2 != "Menjacnica":
+    if user2 != "Bitex":
         user2get = list(userTable.find({"Email": user2}, {"_id": 0}))[0]
     else:
-        user2get = "Menjacnica"
+        user2get = "Bitex"
     transaction = dict()
     transaction["user1"] = user1
     transaction["user2"] = user2
     transaction["currID"] = currID
     transaction["amount"] = float(amount) * 1.05
     user1trans = json.loads(find("transactions", "user1", user1, client))
-    print(user1trans)
     transID = len(user1trans)
-    print(transID)
     transaction["userTransactionID"] = transID
-    transaction["status"] = "U obradi"
+    transaction["status"] = "Processing"
     table.insert_one(transaction)
+
+    if (currID not in user1get["AvailableCoins"]):
+        print("Transaction error -> you dont have any " + currID + " available")
+        table.update_one({"user1": user1, "userTransactionID": transID}, {"$set": {"status": "Rejected"}})
+        return
 
     if user1get and user2get and currID == "USD" or user1get["AvailableCoins"][currID] >= (float(amount) * 1.05):
         k = keccak.new(digest_bits=256)
@@ -229,13 +232,12 @@ def performTransaction(user1: str, user2: str, currID: str, amount: float, usern
         k.update(str(float(amount) * 1.05).encode())
         k.update(str(rand.randint(0, 10000)).encode())
         hashResult = k.hexdigest()
-        sleep(5)
-        table.update_one({"user1": user1, "userTransactionID": transID}, {"$set": {"status": "Obradjeno",
-                                                                                   "hash": hashResult}})
+        sleep(60)
+        table.update_one({"user1": user1, "userTransactionID": transID}, {"$set": {"status": "Processed","hash": hashResult}})
         if transType == "0":
-            print(transCurr)
-            print(transVal)
-            print(user1)
+            print("Transaction currency -> " + transCurr)
+            print("Transaction value -> " + transVal)
+            print("Sender -> " + user1)
             updateBalance("users", "Email", user1, transCurr, transVal, client)
         if transType == "1":
             swap(user1, client, currID, transCurr, amount * 1.05, float(transVal))
@@ -244,8 +246,8 @@ def performTransaction(user1: str, user2: str, currID: str, amount: float, usern
         client.close()
         return
 
-    table.update_one({"user1": user1, "userTransactionID": transID}, {"$set": {"status": "Odbijeno"}})
-    print("Error during transaction")
+    table.update_one({"user1": user1, "userTransactionID": transID}, {"$set": {"status": "Rejected"}})
+    print("Transaction error -> transaction rejected.")
     client.close()
 
 def insertuser(tableName : str, key: str, user, client):
@@ -315,10 +317,10 @@ def swap(userMail, client, coin1: str, coin2: str, val1: float, val2: float):
 def transfer(coin1: str, fromMail, amount, toMail, client):
     user = json.loads(find("users", "Email", fromMail, client))[0]
     if coin1 not in user["AvailableCoins"]:
-        print("No coin")
+        print("Transfer error -> no such coin [ " + coin1 + " ] available")
         return
     if float(user["AvailableCoins"][coin1]) < float(amount):
-        print("Not enough coin")
+        print("Transfer error -> not enough coins available to complete the transfer")
         return
     else:
         toUser = json.loads(find("users", "Email", toMail, client))[0]
@@ -329,3 +331,4 @@ def transfer(coin1: str, fromMail, amount, toMail, client):
         updateuser2("users", toMail, toUser, client)
         user["AvailableCoins"][coin1] -= float(amount) * 1.05
         updateuser2("users", fromMail, user, client)
+        return

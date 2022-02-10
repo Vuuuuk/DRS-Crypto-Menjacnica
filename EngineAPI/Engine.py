@@ -1,5 +1,4 @@
 from multiprocessing import Process
-
 from CoinCapAPI import getAssetsCoinCapAPI
 from MongoAPI import *
 from flask import Flask, request
@@ -30,7 +29,7 @@ def returnAllData():
 def transaction():
     # 0 - Kupovina, 1 - Exchange, 2 - Transfer
     p = Process(target=performTransaction, args=(request.args.get("user1"), request.args.get("user2"), request.args.get("currID"),
-                                                 request.args.get("amount"), "dusan_radulovic", "drs123", request.args.get("transType"),
+                                                 request.args.get("amount"), "isidora_bogdanovic", "drs123", request.args.get("transType"),
                                                  request.args.get("transCurr"), request.args.get("convVal"), ))
     p.daemon = True
     p.start()

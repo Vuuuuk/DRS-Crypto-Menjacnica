@@ -1,0 +1,51 @@
+<section class="stats" id="historyModalRefreshing">
+    <div id="historyModal" class="modal" class="my-1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="closeBtn">
+                    &times;
+                </span>
+                <h1>Transaction history</h1>
+            </div>
+            <div class="modal-body">
+                <h1 style="font-size: 23px" class="text-center my-2">
+                    Take a look at your transaction status & history
+                </h1>
+
+            {% if transactionHistory is defined and transactionHistory|length %}
+
+                <table id="transactionHistoryTable">
+                    <tr>
+                        <th>Sender</th>
+                        <th>Recipient</th>
+                        <th>SYM</th>
+                        <th>AMT</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                    </tr>
+                    {% for row in transactionHistory %}
+                        {% if row["user1"]== session["user_id"]%}
+                            <tr>
+                                <td>{{ row["user1"] }}</td>
+                                <td>{{ row["user2"] }}</td>
+                                <td>{{ row["currID"] }}</td>
+                                <td>{{ "{:,.2f}".format(row["amount"]|float) }}</td>
+                                <td>{{ row["userTransactionID"] }}</td>
+                                <td>{{ row["status"] }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+
+            {% else %}
+
+                <p>No transactions made yet...</p>
+
+            {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+    <script src="{{ url_for('static', filename='js/modal.js') }}"></script> #Fix stacking, maybe update it
